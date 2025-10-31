@@ -17,6 +17,7 @@ public class Client
     
     [Required]
     public string email { get; set; }
+    [Phone]
     [Required]
     public string phoneNumber { get; set; }
     
