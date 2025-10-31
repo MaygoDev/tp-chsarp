@@ -51,4 +51,4 @@ bin\Debug\net9.0\CarDealer.exe
 - Voir `Cli/CarDealerCli.cs` pour les commandes disponibles.
 
 >[!Warning]
-> ⚠️ IMPORTANT :  Si il y a des problèmes avec l'import du <code>appsettings.json</code>, entrez manuellement le lien en dur dans <code>GlobaleVariable.cs</code>.
+> Si il y a des problèmes avec l'import du <code>appsettings.json</code>, entrez manuellement le lien en dur dans <code>GlobaleVariable.cs</code>.
