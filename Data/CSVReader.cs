@@ -68,6 +68,7 @@ public class CSVReader : ICSVReader
                 newVehicle.priceExclTax =Convert.ToDouble(fields[3]);
                 newVehicle.priceInclTax =Convert.ToDouble(fields[3])*1.2;
                 newVehicle.color = fields[4];
+                newVehicle.csvPurchased = bool.Parse(fields[5]);
                 
                 vehicles.Add(newVehicle);
             }

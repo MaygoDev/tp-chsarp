@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarDealer.Models;
 
@@ -26,6 +27,8 @@ public class Vehicle
     
     public Purchase? purchase { get; set; }
 
+    [NotMapped] public bool csvPurchased { get; set; }
+    
     public bool isSold() {
         return this.purchase != null;
     }
