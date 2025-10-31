@@ -57,11 +57,36 @@ if (!context.Vehicles.Any() && !context.Clients.Any())
 
     context.Clients.AddRange(clients);
     context.Vehicles.AddRange(vehicles);
+
     
-    /*
-     * TODO : Purchases
-     * Avec dates aléatoires
-     */
+    
+    var SelledVehicles = vehicles.Where(v => v.csvPurchased).ToList();
+
+    List<Purchase> purchases = new List<Purchase>();
+    
+    foreach (var v in SelledVehicles)
+    {
+        Purchase p = new Purchase();
+        p.Vehicle = v;
+        
+        // Récupérer un client aléatoire qui a acheté la voiture
+        Random rand = new Random();
+        int clientIndex = rand.Next(clients.Count);
+        p.Client = clients[clientIndex];
+        
+        // Générer une date d'achat aléatoire 
+        DateTime start = DateTime.Now.AddYears(-1);
+        int range = (DateTime.Today - start).Days;
+        p.date =DateTime.SpecifyKind( start.AddDays(rand.Next(range)),DateTimeKind.Utc);
+        
+        //Console.WriteLine("Purchase Date: " + p.date.ToShortDateString() + " for Vehicle ID: " + v.Id + " by Client: " + p.Client.firstName + " " + p.Client.lastName);
+        
+        purchases.Add(p);
+        
+    }
+    
+    context.Purchases.AddRange(purchases);
+    
     
     context.SaveChanges();
 } else {
@@ -71,6 +96,6 @@ if (!context.Vehicles.Any() && !context.Clients.Any())
 #endregion
 
 CarDealerCli app = new CarDealerCli(context);
-app.start();
+// app.start();
 
 #endregion
