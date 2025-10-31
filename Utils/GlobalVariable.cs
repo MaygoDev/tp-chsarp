@@ -6,10 +6,11 @@ public class GlobalVariable
 {
     static public string ConnectionString;
     static public IConfiguration Configuration;
+    static public string projectPath;
 
     public GlobalVariable()
     {
-        string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         
         Console.WriteLine("Loading configuration from: " + projectPath);
 
