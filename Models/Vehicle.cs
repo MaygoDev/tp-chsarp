@@ -23,14 +23,8 @@ public class Vehicle
     
     [Required]
     public string color { get; set; }
-
-    public Guid? clientId { get; set; } = null;
     
-    public Client? client { get; set; }
+    public Purchase? purchase { get; set; }
 
-
-    public bool isSold()
-    {
-        return this.client != null;
-    }
+    public bool IsSold => purchase != null;
 }

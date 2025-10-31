@@ -21,6 +21,6 @@ public class Client
     [Required]
     public string phoneNumber { get; set; }
     
-    public List<Vehicle>? vehicles { get; set; }
+    public ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
     
 }

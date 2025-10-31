@@ -1,4 +1,7 @@
-﻿using CarDealer.Data;
+﻿using System.Runtime.CompilerServices;
+using CarDealer.Cli;
+using CarDealer.Data;
+using CarDealer.Models;
 using CarDealer.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -38,8 +41,6 @@ var csvReader = provider.GetRequiredService<ICSVReader>();
 var clients = csvReader.GetClients(GlobalVariable.projectPath + "\\Data\\clients.csv");
 var vehicles = csvReader.GetVehicle(GlobalVariable.projectPath + "\\Data\\voitures.csv");
 
-
-
 var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
     new DbContextOptionsBuilder<CarDealerDbContext>()
         .UseNpgsql(GlobalVariable.ConnectionString)
@@ -47,5 +48,29 @@ var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
 
 using var context = dbContextFactory.CreateDbContext();
 
+#region Insertion
+
+// Check if database is empty before inserting sample data
+if (!context.Vehicles.Any() && !context.Clients.Any())
+{
+    Console.WriteLine("Inserting sample data into the database...");
+
+    context.Clients.AddRange(clients);
+    context.Vehicles.AddRange(vehicles);
+    
+    /*
+     * TODO : Purchases
+     * Avec dates aléatoires
+     */
+    
+    context.SaveChanges();
+} else {
+    Console.WriteLine("Database already contains data, skipping sample data insertion.");
+}
+
+#endregion
+
+CarDealerCli app = new CarDealerCli(context);
+app.start();
 
 #endregion
