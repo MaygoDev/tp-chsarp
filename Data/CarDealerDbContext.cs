@@ -26,7 +26,10 @@ public class CarDealerDbContext : DbContext
             .HasForeignKey(p => p.client)
             .OnDelete(DeleteBehavior.Cascade);
     }
-
+    
+    // A commenter quand on lance le programme
+    // A Garder pour faire des commandes comme migratetion
+    
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //     => optionsBuilder.UseNpgsql(GlobalVariable.ConnectionString);
 

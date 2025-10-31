@@ -13,7 +13,7 @@ using Npgsql;
 // Used only to load configuration at startup
 new GlobalVariable();
 
-#region
+#region Host Configuration| Création des services
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
@@ -31,15 +31,15 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+#endregion
+
+#region Implémentation des services 
 
 using var scope = host.Services.CreateScope();
 var provider = scope.ServiceProvider;
 
 var databaseService = provider.GetRequiredService<Database>();
 var csvReader = provider.GetRequiredService<ICSVReader>();
-
-var clients = csvReader.GetClients(GlobalVariable.projectPath + "\\Data\\clients.csv");
-var vehicles = csvReader.GetVehicle(GlobalVariable.projectPath + "\\Data\\voitures.csv");
 
 var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
     new DbContextOptionsBuilder<CarDealerDbContext>()
@@ -48,7 +48,12 @@ var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
 
 using var context = dbContextFactory.CreateDbContext();
 
-#region Insertion
+#endregion
+
+#region Insertion des données via les fichiers CSV 
+
+var clients = csvReader.GetClients(GlobalVariable.projectPath + "\\Data\\clients.csv");
+var vehicles = csvReader.GetVehicle(GlobalVariable.projectPath + "\\Data\\voitures.csv");
 
 // Check if database is empty before inserting sample data
 if (!context.Vehicles.Any() && !context.Clients.Any())
@@ -57,8 +62,6 @@ if (!context.Vehicles.Any() && !context.Clients.Any())
 
     context.Clients.AddRange(clients);
     context.Vehicles.AddRange(vehicles);
-
-    
     
     var SelledVehicles = vehicles.Where(v => v.csvPurchased).ToList();
 
@@ -82,11 +85,8 @@ if (!context.Vehicles.Any() && !context.Clients.Any())
         //Console.WriteLine("Purchase Date: " + p.date.ToShortDateString() + " for Vehicle ID: " + v.Id + " by Client: " + p.Client.firstName + " " + p.Client.lastName);
         
         purchases.Add(p);
-        
     }
-    
     context.Purchases.AddRange(purchases);
-    
     
     context.SaveChanges();
 } else {
@@ -95,7 +95,7 @@ if (!context.Vehicles.Any() && !context.Clients.Any())
 
 #endregion
 
+// Lancement de l'application CLI
 CarDealerCli app = new CarDealerCli(context);
 app.start();
 
-#endregion

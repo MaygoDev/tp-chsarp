@@ -13,7 +13,8 @@ public interface ICSVReader
 public class CSVReader : ICSVReader
 {
     public List<Client> GetClients(string filePath)
-    {
+    { 
+        // Méthode pour lire les clients depuis un fichier CSV
         try
         {
             var FileContent = File.ReadAllLines(filePath);
@@ -50,6 +51,7 @@ public class CSVReader : ICSVReader
     
     public List<Vehicle> GetVehicle(string filePath)
     {
+        // Méthode pour lire les véhicules depuis un fichier CSV
         try
         {
             var FileContent = File.ReadAllLines(filePath);
