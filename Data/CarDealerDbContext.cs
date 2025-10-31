@@ -1,4 +1,5 @@
 ﻿using CarDealer.Models;
+using CarDealer.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarDealer.Data;
@@ -16,7 +17,7 @@ public class CarDealerDbContext : DbContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=car_dealer;Username=test;Password=test");
+        => optionsBuilder.UseNpgsql(GlobalVariable._connectionString);
 
     
 }
