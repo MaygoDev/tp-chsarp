@@ -53,13 +53,26 @@ public class CSVReader : ICSVReader
         try
         {
             var FileContent = File.ReadAllLines(filePath);
-            
-            foreach (var line in FileContent)
-            {
-                Console.WriteLine(line);
-            }
-                
             List<Vehicle> vehicles = new List<Vehicle>();
+            
+            foreach (var line in FileContent.Skip(1))
+            {
+                Vehicle newVehicle = new Vehicle();
+
+                string[] fields = line.Split("/");
+                
+                newVehicle.manufacturer =fields[0];
+                newVehicle.model = fields[1];
+                
+                newVehicle.year = Convert.ToInt16(fields[2]);
+                newVehicle.priceExclTax =Convert.ToDouble(fields[3]);
+                newVehicle.priceInclTax =Convert.ToDouble(fields[3])*1.2;
+                newVehicle.color = fields[4];
+                
+                vehicles.Add(newVehicle);
+            }
+            
+            Console.WriteLine(vehicles.Count + " vehicules lus depuis le fichier CSV.");
             
             return vehicles;
 

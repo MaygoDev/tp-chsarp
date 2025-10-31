@@ -20,12 +20,24 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddTransient<NpgsqlConnection>(_ =>
             new NpgsqlConnection(GlobalVariable.ConnectionString));
+        
         services.AddTransient<Database>();
+        
+        services.AddTransient<ICSVReader, CSVReader>();
+
     })
     .Build();
 
+
 using var scope = host.Services.CreateScope();
-Database databaseService = scope.ServiceProvider.GetRequiredService<Database>();
+var provider = scope.ServiceProvider;
+
+var databaseService = provider.GetRequiredService<Database>();
+var csvReader = provider.GetRequiredService<ICSVReader>();
+
+var clients = csvReader.GetClients(GlobalVariable.projectPath + "\\Data\\clients.csv");
+var vehicles = csvReader.GetVehicle(GlobalVariable.projectPath + "\\Data\\voitures.csv");
+
 
 
 var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
@@ -34,7 +46,6 @@ var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
         .Options);
 
 using var context = dbContextFactory.CreateDbContext();
-
 
 
 #endregion
