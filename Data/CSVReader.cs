@@ -1,4 +1,6 @@
-﻿using CarDealer.Models;
+﻿using System.Runtime.Serialization;
+using CarDealer.Models;
+using CarDealer.Utils;
 
 namespace CarDealer.Data;
 
@@ -28,7 +30,7 @@ public class CSVReader : ICSVReader
 
                 string rawBirthDate = fields[2];
 
-                newClient.birthDate = DateTime.ParseExact(rawBirthDate, "dd/MM/yyyy", null);
+                newClient.birthDate = DateTImeFormater.FormatDateTime(rawBirthDate);
                 newClient.phoneNumber = fields[3];
                 newClient.email = fields[4];
                 clients.Add(newClient);
