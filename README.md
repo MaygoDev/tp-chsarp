@@ -50,9 +50,5 @@ bin\Debug\net9.0\CarDealer.exe
   - enregistrer un achat.
 - Voir `Cli/CarDealerCli.cs` pour les commandes disponibles.
 
-<!-- Red box (HTML). If your renderer strips styles, use the fallback blockquote below. -->
-<div style="border:2px solid #e55353; background:#fff5f5; color:#000; padding:12px; border-radius:6px;">
-  <strong>⚠️ IMPORTANT :</strong>
-  Si il y a des problèmes avec l'import du <code>settings.json</code>, entrez manuellement le lien en dur dans <code>GlobaleVariable.cs</code>.
-</div>
-
+>[!Warning]
+> ⚠️ IMPORTANT :  Si il y a des problèmes avec l'import du <code>appsettings.json</code>, entrez manuellement le lien en dur dans <code>GlobaleVariable.cs</code>.
