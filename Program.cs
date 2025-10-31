@@ -96,6 +96,6 @@ if (!context.Vehicles.Any() && !context.Clients.Any())
 #endregion
 
 CarDealerCli app = new CarDealerCli(context);
-// app.start();
+app.start();
 
 #endregion
