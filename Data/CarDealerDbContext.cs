@@ -17,7 +17,7 @@ public class CarDealerDbContext : DbContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(GlobalVariable._connectionString);
+        => optionsBuilder.UseNpgsql(GlobalVariable.ConnectionString);
 
     
 }

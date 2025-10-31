@@ -7,19 +7,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 
+// Used only to load configuration at startup
+new GlobalVariable();
+
 #region
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddDbContext<CarDealerDbContext>(options =>
-            options.UseNpgsql(GlobalVariable._connectionString));
+            options.UseNpgsql(GlobalVariable.ConnectionString));
 
-        // On enregistre la connexion PostgreSQL
         services.AddTransient<NpgsqlConnection>(_ =>
-            new NpgsqlConnection(GlobalVariable._connectionString));
-
-        // Et ton service Database
+            new NpgsqlConnection(GlobalVariable.ConnectionString));
         services.AddTransient<Database>();
     })
     .Build();
@@ -30,7 +30,7 @@ Database databaseService = scope.ServiceProvider.GetRequiredService<Database>();
 
 var dbContextFactory = new PooledDbContextFactory<CarDealerDbContext>(
     new DbContextOptionsBuilder<CarDealerDbContext>()
-        .UseNpgsql(GlobalVariable._connectionString)
+        .UseNpgsql(GlobalVariable.ConnectionString)
         .Options);
 
 using var context = dbContextFactory.CreateDbContext();
