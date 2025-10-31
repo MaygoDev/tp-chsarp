@@ -10,8 +10,8 @@ public class GlobalVariable
 
     public GlobalVariable()
     {
-        projectPath = Directory.GetParent(Environment.CurrentDirectory).FullName;
-        projectPath = @"C:\Users\Johann\Documents\DEV\Maygo\CarDealer";
+        projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        projectPath = @"C:\Users\Baptiste.dps\dev\tp-chsarp";
         
         Console.WriteLine("Loading configuration from: " + projectPath);
 
