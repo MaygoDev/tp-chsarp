@@ -37,10 +37,10 @@ public class CarDealerCli
                 showPurchaseHistory();
                 break;
             case "3":
-                sellVehicle();
+                addClient();
                 break;
             case "4":
-                sellVehicle();
+                addVehicle();
                 break;
             case "5":
                 sellVehicle();
@@ -56,6 +56,54 @@ public class CarDealerCli
         }
     }
 
+    private void addVehicle()
+    {
+        Console.Clear();
+        Vehicle vehicle = new Vehicle();
+        Console.Write("Manufacturer: ");
+        vehicle.manufacturer = Console.ReadLine();
+        Console.Write("Model: ");
+        vehicle.model = Console.ReadLine();
+        Console.Write("Year: ");
+        vehicle.year = int.Parse(Console.ReadLine() ?? "0");
+        Console.Write("Price Excl. Tax: ");
+        vehicle.priceExclTax = double.Parse(Console.ReadLine() ?? "0");
+        vehicle.priceInclTax = vehicle.priceExclTax * 1.2;
+        Console.Write("Color: ");
+        vehicle.color = Console.ReadLine();
+
+        this.DbContext.Vehicles.Add(vehicle);
+        this.DbContext.SaveChanges();
+        
+        Console.WriteLine($"Vehicle {vehicle.manufacturer} {vehicle.model} added successfully.");
+        
+        this.back();
+    }
+
+    private void addClient()
+    {
+        Console.Clear();
+        Client client = new Client();
+        Console.Write("First Name: ");
+        client.firstName = Console.ReadLine();
+        Console.Write("Last Name: ");
+        client.lastName = Console.ReadLine();
+        Console.Write("Birth Date (dd/MM/yyyy): ");
+        string birthDateInput = Console.ReadLine();
+        client.birthDate = DateTImeFormater.FormatDateTime(birthDateInput);
+        Console.Write("Phone Number: ");
+        client.phoneNumber = Console.ReadLine();
+        Console.Write("Email: ");
+        client.email = Console.ReadLine();
+
+        this.DbContext.Clients.Add(client);
+        this.DbContext.SaveChanges();
+        
+        Console.WriteLine($"Client {client.firstName} {client.lastName} added successfully.");
+        
+        this.back();
+    }
+
     private void showPurchaseHistory()
     {
         Console.Clear();
@@ -65,12 +113,25 @@ public class CarDealerCli
             .ToList();
         
         purchases.Sort((a, b) => a.date.CompareTo(b.date));
+        
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"{"Date",-20} {"Client",-30} {"Vehicle",-30}");
+        Console.ResetColor();
+
+        Console.WriteLine(new string('-', 85));
+        
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         foreach (Purchase purchase in purchases)
         {
             Client? client = purchase.Client;
             Vehicle? vehicle = purchase.Vehicle;
-            Console.WriteLine(
-                $"Date: {purchase.date.ToShortDateString()} {purchase.date.ToShortTimeString()}, Client: {client?.firstName} {client?.lastName}, Vehicle: {vehicle?.manufacturer} {vehicle?.model} ({vehicle?.year})");
+          
+            string date = $"{purchase.date:dd/MM/yyyy HH:mm}";
+            string clientName = $"{client?.firstName} {client?.lastName}";
+            string vehicleName = $"{vehicle?.manufacturer} {vehicle?.model} ({vehicle?.year})";
+
+            Console.WriteLine($"{date,-20} {clientName,-30} {vehicleName,-30}");
+            
         }
         
         this.back();
@@ -79,15 +140,28 @@ public class CarDealerCli
     private void showVehicles()
     {
         Console.Clear();
-        
-        List<Vehicle> vehicles = this.DbContext.Vehicles
-            .Include(vehicle => vehicle.purchase).ToList();
-        // Sort by sold
+
+        var vehicles = this.DbContext.Vehicles
+            .Include(vehicle => vehicle.purchase)
+            .ToList();
+
+        // Tri : d’abord les non vendus, puis les vendus
         vehicles.Sort((a, b) => a.isSold().CompareTo(b.isSold()));
-        
-        foreach (Vehicle vehicle in vehicles) {
-            Console.WriteLine($"ID: {vehicle.Id}, Manufacturer: {vehicle.manufacturer}, Model: {vehicle.model}, Year: {vehicle.year}");
-            
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"{"Manufacturer",-15} {"Model",-15} {"Year",-6} {"Color",-20} {"Excl.Tax",-10} {"Incl.Tax",-10} {"Status",-10}");
+        Console.ResetColor();
+
+        Console.WriteLine(new string('-', 85));
+
+        foreach (var vehicle in vehicles)
+        {
+            bool sold = vehicle.isSold();
+            Console.ForegroundColor = sold ? ConsoleColor.DarkGray : ConsoleColor.Green;
+
+            string status = sold ? "SOLD" : "AVAILABLE";
+
+            Console.WriteLine($"{vehicle.manufacturer,-15} {vehicle.model,-15} {vehicle.year,-6} {vehicle.color,-20} {vehicle.priceExclTax,-10:C0} {vehicle.priceInclTax,-10:C0} {status,-10}");
         }
 
         this.back();
@@ -95,6 +169,8 @@ public class CarDealerCli
 
     private void back()
     {
+
+        Console.ResetColor();
         Console.WriteLine("Press any key to return to main menu.");
         Console.ReadKey();
         start();
@@ -104,7 +180,17 @@ public class CarDealerCli
     {
         Console.Clear();
         Vehicle vehicle = this.selectVehicle();
+        if (vehicle == null)
+        {
+            this.back();
+            return;
+        }
         Client client = this.selectClient();
+        if (client == null)
+        {
+            this.back();
+            return;
+        }
         Console.Clear();
         
         Purchase purchase = new Purchase();
@@ -120,10 +206,10 @@ public class CarDealerCli
         this.back();
     }
 
-    private Vehicle selectVehicle(Vehicle selected = null)
+    private Vehicle? selectVehicle(Vehicle selected = null)
     {
         Console.Clear();
-        Console.WriteLine("Select a vehicle using arrow keys to sell:");
+        Console.WriteLine("Select a vehicle using arrow keys to sell (Press C to Cancel):");
 
         var vehicles = this.DbContext.Vehicles
             .Include(vehicle => vehicle.purchase)
@@ -170,6 +256,10 @@ public class CarDealerCli
         {
             return vehicles[selectedIndex];
         }
+        else if (key.Key == ConsoleKey.C)
+        {
+            return null;
+        }
         else
         {
             return selectVehicle(vehicles[selectedIndex]);
@@ -177,10 +267,10 @@ public class CarDealerCli
     }
 
     
-    private Client selectClient(Client selected = null)
+    private Client? selectClient(Client selected = null)
     {
         Console.Clear();
-        Console.WriteLine("Select a client using arrow keys to sell:");
+        Console.WriteLine("Select a client using arrow keys to sell (Press C to Cancel):");
 
         var clients = this.DbContext.Clients.ToList();
 
@@ -223,6 +313,10 @@ public class CarDealerCli
         else if (key.Key == ConsoleKey.Enter)
         {
             return clients[selectedIndex];
+        }
+        else if (key.Key == ConsoleKey.C)
+        {
+            return null;
         }
         else
         {
