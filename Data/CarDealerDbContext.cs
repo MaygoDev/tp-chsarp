@@ -27,8 +27,8 @@ public class CarDealerDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(GlobalVariable.ConnectionString);
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder.UseNpgsql(GlobalVariable.ConnectionString);
 
     
 }

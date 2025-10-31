@@ -26,5 +26,7 @@ public class Vehicle
     
     public Purchase? purchase { get; set; }
 
-    public bool IsSold => purchase != null;
+    public bool isSold() {
+        return this.purchase != null;
+    }
 }

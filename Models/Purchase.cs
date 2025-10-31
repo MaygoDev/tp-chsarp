@@ -15,7 +15,6 @@ public class Purchase
     [Required]
     public Guid vehicle { get; set; }
     
-    // Navigation properties
     [ForeignKey(nameof(client))]
     public Client? Client { get; set; }
 
