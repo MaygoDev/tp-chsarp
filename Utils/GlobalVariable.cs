@@ -11,7 +11,7 @@ public class GlobalVariable
     public GlobalVariable()
     {
         projectPath = Directory.GetParent(Environment.CurrentDirectory).FullName;
-        projectPath = @"C:\Users\Johann\Documents\DEV\Maygo\CarDealer";
+        // projectPath = @"C:\Users\Johann\Documents\DEV\Maygo\CarDealer"; FIXME : Modifier cette ligne si problème de configuration
         
         Console.WriteLine("Loading configuration from: " + projectPath);
 
