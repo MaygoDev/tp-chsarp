@@ -2,6 +2,8 @@
 
 Application console pour gérer clients, véhicules et achats d'un concessionnaire automobile.
 
+
+
 ## Fonctionnalités principales
 - Import et lecture de fichiers CSV d'initialisation (`Data/clients.csv`, `Data/voitures.csv`).
 - Gestion des entités : `Client`, `Vehicle`, `Purchase`.
@@ -47,3 +49,6 @@ bin\Debug\net9.0\CarDealer.exe
   - ajouter un client ou un véhicule,
   - enregistrer un achat.
 - Voir `Cli/CarDealerCli.cs` pour les commandes disponibles.
+
+>[!Warning]
+> ⚠️ IMPORTANT :  Si il y a des problèmes avec l'import du <code>appsettings.json</code>, entrez manuellement le lien en dur dans <code>GlobaleVariable.cs</code>.
